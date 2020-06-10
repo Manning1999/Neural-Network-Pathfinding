@@ -1,0 +1,50 @@
+0,0,1,1,0,0 //Right Slow down
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up ----5
+0,1,0,0,0,1 //Forward Speed up
+0,0,1,0,0,1 //Right Speed up
+0,0,1,0,1,1 //Right Maintain Speed
+1,0,0,0,0,1 //Left Slow Down
+0,1,0,0,0,1 //Forward Speed up ----10
+1,0,0,0,1,0 //Left Maintain Speed
+1,0,0,0,1,0 //Left Maintain Speed
+1,0,0,1,0,0 //Left Slow down
+0,0,1,1,0,0 //Right Slow down
+0,1,0,0,0,1 //Forward Speed up ----15
+0,1,0,0,0,1 //Right Speed up
+1,0,0,0,0,1 //Left Speed up
+0,0,1,0,1,0 //Right Maintain Speed
+1,0,0,0,1,0 //Left Maintain Speed
+1,0,0,0,0,1 //Left Speed up ----20
+0,0,1,0,1,0 //Right Maintain Speed
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up
+1,0,0,0,1,0 //Left Maintain Speed  ----25
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up
+1,0,0,0,1,0 //Left maintain speed
+0,0,1,0,1,0 //Right Maintain Speed 
+0,1,0,0,0,1 //Forward Speed up ----30
+1,0,0,0,1,0 //Left maintain speed
+0,0,1,0,1,0 //Right Maintain Speed
+0,0,1,0,0,1 //Forward Speed up 
+0,1,0,0,1,0 //Forward Maintain Speed
+0,1,0,0,1,0 //Forward Maintain Speed----35
+0,0,1,1,0,0 //Right Slow Down
+1,0,0,1,0,0 //Left Slow Down
+0,1,0,0,1,0 //Forward Maintain Speed
+0,0,1,0,1,0 //Right Maintain Speed
+0,1,0,0,1,0 //Forward Maintain Speed ----40
+0,0,1,0,1,0 //Right Maintain Speed
+0,1,0,0,1,0 //Forward Maintain Speed
+1,0,0,0,1,0 //Left maintain speed
+0,0,1,0,1,0 //Right Maintain Speed
+0,1,0,0,0,1 //Forward Speed up ----45
+0,1,0,0,0,1 //Forward Speed up
+0,1,0,0,0,1 //Forward Speed up
+0,0,1,1,0,0 //Right slow down
+1,0,0,1,0,0 //Left slow down
+0,0,1,0,1,0 //Right Maintain speed ----50

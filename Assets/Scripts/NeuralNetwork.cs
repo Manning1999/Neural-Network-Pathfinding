@@ -99,7 +99,7 @@ public class NeuralNetwork
     }
 
 
-
+    //This initializes all the weights for the connections between neurons by giving them randomized weights
     private void InitWeights()
     {
         List<float[][]> weightsList = new List<float[][]>();
@@ -309,6 +309,22 @@ public class NeuralNetwork
         }
 
 
+    }
+
+
+
+    public void AdjustWeights(float difference)
+    {
+        for (int i = 0; i < weights.Length; i++)
+        {
+            for (int j = 0; j < weights[i].Length; j++)
+            {
+                for (int k = 0; k < weights[i][j].Length; k++)
+                {
+                    weights[i][j][k] += difference;
+                }
+            }
+        }
     }
 
 

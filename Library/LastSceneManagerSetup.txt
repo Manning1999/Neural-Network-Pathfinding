@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Drift Track.unity
+- path: Assets/Scenes/Racecar Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

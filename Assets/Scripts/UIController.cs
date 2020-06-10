@@ -16,6 +16,9 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Runner selectedRunner = null;
 
+    [SerializeField]
+    private Car selectedCar = null;
+
     private bool paused = false;
 
     //create singleton - This means that there can only be one of this in the scene at any given time
@@ -54,12 +57,31 @@ public class UIController : MonoBehaviour
     }
 
 
-    public void KillRunner()
+    public void SelectRunner(Car car)
     {
-        selectedRunner.KillRunner();
+        if (car == null || selectedRunner != car)
+        {
+            selectedCar = car;
+            killButton.SetActive(true);
+            bestButton.SetActive(true);
+        }
+        else if (selectedRunner == car)
+        {
+            selectedCar = null;
+            selectedRunnerIcon.transform.GetComponent<RectTransform>().position = new Vector3(-9999, -9999, -9999);
+            killButton.SetActive(false);
+            bestButton.SetActive(false);
+        }
     }
 
-    public void KillAllRunners()
+
+    public void KillAgent()
+    {
+        if(selectedRunner != null) selectedRunner.KillRunner();
+        if (selectedCar != null) selectedCar.KillCar();
+    }
+
+    public void KillAllAgents()
     {
         foreach(Runner runner in FindObjectsOfType<Runner>())
         {
@@ -67,7 +89,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void MakeRunnerBest()
+    public void MakeAgentBest()
     {
         PopulationController.Instance.SetBest(selectedRunner._net);
     }
@@ -94,6 +116,10 @@ public class UIController : MonoBehaviour
         if (selectedRunner != null)
         {
             selectedRunnerIcon.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedRunner.transform.position);
+        }
+        if(selectedCar != null)
+        {
+            selectedRunnerIcon.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedCar.transform.position);
         }
        
     }

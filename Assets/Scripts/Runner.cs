@@ -112,10 +112,9 @@ public class Runner : MonoBehaviour
             results = net.FeedForward(inputs);
             
 
-            //for(int i = 0; i <results.Length; i++)
-            //{
-                results = Sigmoid(results);
-           // }    
+           
+            results = Sigmoid(results);
+           
 
 
 

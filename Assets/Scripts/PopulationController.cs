@@ -45,11 +45,14 @@ public class PopulationController : MonoBehaviour
 
     List<NeuralNetwork> netsRemaining = new List<NeuralNetwork>();
 
+    [SerializeField]
+    private int mutationRate = 100;
+
 
     public void Start()
     {
         //determine whether this is the runner scene of the car scene
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SampleScene"))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Runner Scene"))
         {
             foreach (Runner runner in GameObject.FindObjectsOfType<Runner>())
             {
@@ -61,14 +64,29 @@ public class PopulationController : MonoBehaviour
         {
             foreach (Car car in GameObject.FindObjectsOfType<Car>())
             {
-                car.Init(new NeuralNetwork(new int[5] { 3137, 32, 32, 16, 6 }));
+                //create a new network with an input layer large enough to store every pixel from the camera + 1 so their is a boolean for whether the car is on the track
+                car.Init(new NeuralNetwork(new int[4] { car._camera.pixelWidth * car._camera.pixelHeight, 16, 16, 3 }));
                 nets.Add(car._net);
+                Debug.Log(car._camera.pixelWidth * car._camera.pixelHeight);
             }
         }
 
         netsRemaining = nets;
-        
 
+
+    }
+
+    [ContextMenu("Kill All")]
+    public void KillAll()
+    {
+        foreach(Runner runner in FindObjectsOfType<Runner>())
+        {
+            RunnerKilled(runner._net);
+        }
+        foreach (Car car in FindObjectsOfType<Car>())
+        {
+            RunnerKilled(car._net);
+        }
     }
 
 
@@ -129,7 +147,7 @@ public class PopulationController : MonoBehaviour
     private void ASexuallyReproduce()
     {
         //determine whether this is the runner scene of the car scene
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SampleScene"))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Runner Scene"))
         {
             //reset the position/rotation of all agents and give them all the same weights as the previous best agent then mutate them all slightly 
             foreach (Runner runner in GameObject.FindObjectsOfType<Runner>())
@@ -144,7 +162,7 @@ public class PopulationController : MonoBehaviour
                 {
 
                     runner._net.SetWeights(bestNet.GetWeights());
-                    runner._net.Mutate(3);
+                    runner._net.Mutate(mutationRate);
 
                 }
             }
@@ -154,17 +172,17 @@ public class PopulationController : MonoBehaviour
             //reset the position/rotation of all agents and give them all the same weights as the previous best agent then mutate them all slightly 
             foreach (Car car in GameObject.FindObjectsOfType<Car>())
             {
-               
+
                 netsRemaining.Add(car._net);
                 car.Reset();
 
-                if (car._net != bestNet)
+                if (car._net != bestNet || GameObject.FindObjectsOfType<Car>().Length == 1)
                 {
-
                     car._net.SetWeights(bestNet.GetWeights());
-                    car._net.Mutate(30);
-
+                    car._net.Mutate(mutationRate);
                 }
+
+
             }
         }
         bestNet = null;
