@@ -8,16 +8,14 @@ public class UIController : MonoBehaviour
     private GameObject killButton = null;
 
     [SerializeField]
-    private GameObject bestButton = null;
+    private GameObject makeBestButton = null;
 
     [SerializeField]
-    private GameObject selectedRunnerIcon = null;
+    private GameObject selectedAgentIcon = null;
 
     [SerializeField]
-    private Runner selectedRunner = null;
-
-    [SerializeField]
-    private Car selectedCar = null;
+    private Agent selectedAgent = null;
+    
 
     private bool paused = false;
 
@@ -39,62 +37,48 @@ public class UIController : MonoBehaviour
     }
 
 
-    public void SelectRunner(Runner runner)
+    public void SelectAgent(Agent agent)
     {
-        if (runner == null || selectedRunner != runner)
+        if (agent == null || selectedAgent != agent)
         {
-            selectedRunner = runner;
+            selectedAgent = agent;
             killButton.SetActive(true);
-            bestButton.SetActive(true);
+            makeBestButton.SetActive(true);
         }
-        else if(selectedRunner == runner)
+        else if(selectedAgent == agent)
         {
-            selectedRunner = null;
-            selectedRunnerIcon.transform.GetComponent<RectTransform>().position = new Vector3(-9999, -9999, -9999);
+            selectedAgent = null;
+            selectedAgentIcon.transform.GetComponent<RectTransform>().position = new Vector3(-9999, -9999, -9999);
             killButton.SetActive(false);
-            bestButton.SetActive(false);
+            makeBestButton.SetActive(false);
         }  
     }
 
 
-    public void SelectRunner(Car car)
-    {
-        if (car == null || selectedRunner != car)
-        {
-            selectedCar = car;
-            killButton.SetActive(true);
-            bestButton.SetActive(true);
-        }
-        else if (selectedRunner == car)
-        {
-            selectedCar = null;
-            selectedRunnerIcon.transform.GetComponent<RectTransform>().position = new Vector3(-9999, -9999, -9999);
-            killButton.SetActive(false);
-            bestButton.SetActive(false);
-        }
-    }
-
+   
 
     public void KillAgent()
     {
-        if(selectedRunner != null) selectedRunner.KillRunner();
-        if (selectedCar != null) selectedCar.KillCar();
+        if(selectedAgent != null) selectedAgent.KillAgent();
+        
     }
+
 
     public void KillAllAgents()
     {
         foreach(Runner runner in FindObjectsOfType<Runner>())
         {
-            runner.KillRunner();
+            runner.KillAgent();
         }
     }
 
+
     public void MakeAgentBest()
     {
-        PopulationController.Instance.SetBest(selectedRunner._net);
+        PopulationController.Instance.SetBest(selectedAgent._net);
     }
 
-
+        
     public void PauseTime()
     {
         paused = !paused;
@@ -113,14 +97,9 @@ public class UIController : MonoBehaviour
 
     public void Update()
     {
-        if (selectedRunner != null)
+        if (selectedAgent != null)
         {
-            selectedRunnerIcon.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedRunner.transform.position);
-        }
-        if(selectedCar != null)
-        {
-            selectedRunnerIcon.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedCar.transform.position);
-        }
-       
+            selectedAgent.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedAgent.transform.position);
+        } 
     }
 }
