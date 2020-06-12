@@ -3,28 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+[Serializable]
 public class NeuralNetwork
 {
 
     private int[] layers;
     private float[][] neurons;
-    public float[][][] weights;
+    private float[][][] weights;
 
     float fitness;
     int numFitnesses = 0;
 
 
-    public NeuralNetwork(int[] newLayers, float[][] newNeurons, float[][][] newWeights, bool mutateNetwork = false, int genesToMutate = 0)
-    {
-        
-        layers = newLayers;
-        neurons = newNeurons;
-        weights = newWeights;
-
-        if (mutateNetwork == true) Mutate(genesToMutate);
-    }
-
+   
 
     public NeuralNetwork(int[] layers)
     {
@@ -209,6 +200,8 @@ public class NeuralNetwork
 
         return neurons[neurons.Length - 1]; //return output layer
     }
+
+
 
 
 

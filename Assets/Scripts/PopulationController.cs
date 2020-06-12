@@ -28,25 +28,44 @@ public class PopulationController : MonoBehaviour
         }
     }
 
+    public enum TrainingMethod { BackPropogation, EvolutionaryAlgorithm }
+
+    [Tooltip("Backpropogation requires training data which will over time adjust the network's weights to get a working model (This is often the fastest method IF you have good training data. \n \nEvolutionary " +
+        "Algorithm simulates evolutionary processes by having a group of neural-networks with randomized weights (genetic variation), they each do their thing and then the one's that are most fit for whatever you want " +
+        "them to do copy their weights to the next generation of networks (reproduce) and randomize a specified number of weights (mutate). This process is then repeated until you have a workable model. This method is " +
+        "often slower but can produce better results that backpropogation")]
+    public TrainingMethod trainingmethod = TrainingMethod.EvolutionaryAlgorithm;
+
     public enum ReproductionMethod { Sexual, Asexual }
     public ReproductionMethod reproductionMethod = ReproductionMethod.Sexual;
 
 
 
-
+    //This is used in sexual-reproduction and asexual-resproduction
     NeuralNetwork bestNet = null;
+
+    //This is only used for sexual-reproduction
     NeuralNetwork secondBestNet = null;
+
     float averageFitness;
     int numFitnesses;
 
+    //If true, any auto-fitness calculations will be ignored
     bool forcedBest = false;
 
+    //This is a list of all the neural networks in the scene
     List<NeuralNetwork> nets = new List<NeuralNetwork>();
 
+    //This is how many neural networks are still "alive"
     List<NeuralNetwork> netsRemaining = new List<NeuralNetwork>();
 
     [SerializeField]
+    [Tooltip("This is how many weights/genes should be randomized/mutated")]
     private int mutationRate = 100;
+
+
+    [SerializeField]
+    private int[] defaultNeuronsPerLayer = new int[] { 5, 4, 3 };
 
 
     public void Start()
@@ -54,10 +73,10 @@ public class PopulationController : MonoBehaviour
         //determine whether this is the runner scene of the car scene
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Runner Scene"))
         {
-            foreach (Runner runner in GameObject.FindObjectsOfType<Runner>())
+            foreach (Agent agent in GameObject.FindObjectsOfType<Agent>())
             {
-                runner.Init(new NeuralNetwork(new int[3] { 5, 4, 3 }));
-                nets.Add(runner._net);
+                agent.Init(new NeuralNetwork(defaultNeuronsPerLayer));
+                nets.Add(agent._net);
             }
         }
         else
@@ -79,14 +98,11 @@ public class PopulationController : MonoBehaviour
     [ContextMenu("Kill All")]
     public void KillAll()
     {
-        foreach(Runner runner in FindObjectsOfType<Runner>())
+        foreach(Agent agent in FindObjectsOfType<Agent>())
         {
-            RunnerKilled(runner._net);
+            RunnerKilled(agent._net);
         }
-        foreach (Car car in FindObjectsOfType<Car>())
-        {
-            RunnerKilled(car._net);
-        }
+       
     }
 
 
@@ -125,8 +141,16 @@ public class PopulationController : MonoBehaviour
         if (netsRemaining.Count == 0)
         {
             forcedBest = false;
-            
-            ASexuallyReproduce();
+
+            if (reproductionMethod == ReproductionMethod.Asexual)
+            {
+
+                ASexuallyReproduce();
+            }
+            else
+            {
+                SexuallyReproduce(bestNet, secondBestNet);
+            }
         }
     }
 
@@ -141,52 +165,33 @@ public class PopulationController : MonoBehaviour
     }
 
 
-
+    #region -----Reproduction Methods-----
 
     //This method of reproducing will simply copy the weights of the best one to all the other agents and then slightly mutate them
     private void ASexuallyReproduce()
     {
-        //determine whether this is the runner scene of the car scene
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Runner Scene"))
+
+        //reset the position/rotation of all agents and give them all the same weights as the previous best agent then mutate them all slightly 
+        foreach (Agent agent in GameObject.FindObjectsOfType<Agent>())
         {
-            //reset the position/rotation of all agents and give them all the same weights as the previous best agent then mutate them all slightly 
-            foreach (Runner runner in GameObject.FindObjectsOfType<Runner>())
+
+            netsRemaining.Add(agent._net);
+            agent.Reset();
+
+            if (agent._net != bestNet)
             {
 
-                runner.transform.position = new Vector3(0, 0, 0);
-                runner.transform.rotation = Quaternion.Euler(0, 180, 0);
-                netsRemaining.Add(runner._net);
-                runner.Reset();
-
-                if (runner._net != bestNet)
-                {
-
-                    runner._net.SetWeights(bestNet.GetWeights());
-                    runner._net.Mutate(mutationRate);
-
-                }
-            }
-        }
-        else
-        {
-            //reset the position/rotation of all agents and give them all the same weights as the previous best agent then mutate them all slightly 
-            foreach (Car car in GameObject.FindObjectsOfType<Car>())
-            {
-
-                netsRemaining.Add(car._net);
-                car.Reset();
-
-                if (car._net != bestNet || GameObject.FindObjectsOfType<Car>().Length == 1)
-                {
-                    car._net.SetWeights(bestNet.GetWeights());
-                    car._net.Mutate(mutationRate);
-                }
-
+                agent._net.SetWeights(bestNet.GetWeights());
+                agent._net.Mutate(mutationRate);
 
             }
         }
+
         bestNet = null;
     }
+       
+        
+
 
 
    
@@ -224,43 +229,39 @@ public class PopulationController : MonoBehaviour
 
         //Reset the position and rotation of each agent
         //set the weights to that of child 1 and then mutate 20 random genes in each agent
-        foreach (Runner runner in GameObject.FindObjectsOfType<Runner>())
+        foreach (Agent agent in GameObject.FindObjectsOfType<Agent>())
         {
-            runner.transform.position = new Vector3(0, 0, 0);
-            runner.transform.rotation = Quaternion.Euler(0, 180, 0);
-            netsRemaining.Add(runner._net);
             
-            runner.Reset();
+            netsRemaining.Add(agent._net);
+
+            agent.Reset();
             
-            if (runner._net != bestNet)
+            if (agent._net != bestNet)
             {
                 int randomNum = UnityEngine.Random.Range(0, 1);
 
                 if (randomNum == 0)
                 {
-                    runner._net.SetWeights(child1Weights);
+                    agent._net.SetWeights(child1Weights);
                 }
                 else
                 {
-                    runner._net.SetWeights(child2Weights);
+                    agent._net.SetWeights(child2Weights);
                 }
-                runner._net.Mutate(2);
+                agent._net.Mutate(2);
 
             }
-            else
-            {
-                Debug.Log(runner.transform.name + " Did the best");
-            }
+    
         }
 
-    } 
+    }
 
 
-  
+    #endregion
 
 
 
-
+     
     //This is a helper function which prints things out to a text document
     public static void WriteString(string stringToWrite)
     {
@@ -276,18 +277,6 @@ public class PopulationController : MonoBehaviour
         TextAsset asset = (TextAsset)Resources.Load("Test.txt");
 
 
-    }
-
-
-    //This will read the text document (Will later be used to save models)
-    [MenuItem("Tools/Read file")]
-    static void ReadString()
-    {
-        string path = "Assets/Resources/test.txt";
-
-        //Read the text from directly from the test.txt file
-        StreamReader reader = new StreamReader(path);
-        Debug.Log(reader.ReadToEnd());
-        reader.Close();
-    }
+    }   
+ 
 }

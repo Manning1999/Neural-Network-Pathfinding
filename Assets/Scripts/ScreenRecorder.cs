@@ -153,6 +153,7 @@ public class ScreenRecorder : MonoBehaviour
         Graphics.Blit(source, destination);
     }
 
+
     private void EncodeAndSave()
     {
         print("SCREENRECORDER IO THREAD STARTED");
