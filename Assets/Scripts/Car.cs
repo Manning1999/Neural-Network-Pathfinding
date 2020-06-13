@@ -31,7 +31,7 @@ public class Car : Agent
     private float accelerationSpeed = 500;
 
     [SerializeField]
-    private float maxSpeed = 50000;
+    private float maxSpeed = 5000;
 
     [SerializeField]
     [Tooltip("This is the maximum for how much the steering wheels can rotate (Inverses for minimum rotation)")]
@@ -48,12 +48,38 @@ public class Car : Agent
     Vector3 startPosition;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         inputs = new float[camera.pixelWidth * camera.pixelHeight];
         rb = transform.GetComponent<Rigidbody>();
         startPosition = transform.position;
         
+    }
+
+
+    public override void Init(NeuralNetwork net)
+    {
+        //If not network size has been specified then a default one will be made
+        if (net == null)
+        {
+            if (savedNetwork == null)
+            {
+                net = new NeuralNetwork(new int[4] { camera.pixelWidth * camera.pixelHeight, 16, 8, 3 });
+            }
+            else
+            {
+                net = ReadSavedNetwork();
+            }
+        }
+
+        if (savedNetwork != null)
+        {
+            net = ReadSavedNetwork();
+        }
+
+        this.net = net;
+        initialized = true;
     }
 
 
@@ -84,10 +110,11 @@ public class Car : Agent
                 i++;
             }
 
+
             //feed the inputs into the neural network
             results = net.FeedForward(inputs);
 
-            results = Sigmoid(results);
+           // results = Sigmoid(results);
 
 
             //controls wheel rotation based on which output was highest
@@ -167,10 +194,10 @@ public class Car : Agent
 
 
 
-    #region -------Car controls-------
+    #region -------Car controls--------
     private void Accelerate()
     {
-        if (FRWheel.motorTorque <= maxSpeed)
+        if (FRWheel.rpm <= maxSpeed)
         {
             BRWheel.motorTorque += accelerationSpeed;
             BLWheel.motorTorque += accelerationSpeed;
@@ -200,15 +227,15 @@ public class Car : Agent
 
     private void TurnRight()
     {
-        FRWheel.steerAngle = Mathf.Lerp(FRWheel.steerAngle, maxWheelRotation, Time.deltaTime * 1);
-        FLWheel.steerAngle = Mathf.Lerp(FLWheel.steerAngle, maxWheelRotation, Time.deltaTime * 1);
+        FRWheel.steerAngle = Mathf.Lerp(FRWheel.steerAngle, maxWheelRotation, Time.deltaTime * 1f);
+        FLWheel.steerAngle = Mathf.Lerp(FLWheel.steerAngle, maxWheelRotation, Time.deltaTime * 1f);
     }
 
     private void TurnLeft()
     {
 
-        FRWheel.steerAngle = Mathf.Lerp(FRWheel.steerAngle, -maxWheelRotation, Time.deltaTime * 1);
-        FLWheel.steerAngle = Mathf.Lerp(FLWheel.steerAngle, -maxWheelRotation, Time.deltaTime * 1);
+        FRWheel.steerAngle = Mathf.Lerp(FRWheel.steerAngle, -maxWheelRotation, Time.deltaTime * 1f);
+        FLWheel.steerAngle = Mathf.Lerp(FLWheel.steerAngle, -maxWheelRotation, Time.deltaTime * 1f);
 
     }
 
@@ -224,11 +251,15 @@ public class Car : Agent
    
     public override void Reset()
     {
+        
         transform.position = new Vector3(240.71f, 0.5531964f, 216.5f);
         transform.rotation = Quaternion.Euler(0, -174.285f, 0);
 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        rb.ResetInertiaTensor();
+
+
         BLWheel.motorTorque = 0;
         BRWheel.motorTorque = 0;
 
@@ -239,7 +270,7 @@ public class Car : Agent
 
         FRWheel.steerAngle = 0;
         FLWheel.steerAngle = 0;
-        stopped = false;
+        base.Reset();
     }
 
 
@@ -247,27 +278,15 @@ public class Car : Agent
 
     private void OnCollisionEnter(Collision col)
     {
-        if (col.transform.tag == "Wall" && net != null)
+        if (col.transform.tag == "Wall" && net != null && stopped == false)
         {
-            KillCar();
+            Debug.Log("crashed into a wall");
+            KillAgent();
         }
     }
 
 
-    #region -----Genetic Algorithm tools-----
-    [ContextMenu("Kill Car")]
-    public void KillCar()
-    {
-        Debug.Log("Killed " + transform.name);
-        stopped = true;
-        net.SetFitness(Vector3.Distance(startPosition, transform.position));
-        PopulationController.Instance.RunnerKilled(net);
-
-    }
-
-    
-
-    #endregion
+   
 
     
 

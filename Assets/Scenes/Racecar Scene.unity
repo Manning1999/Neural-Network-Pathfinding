@@ -17761,7 +17761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trainingmethod: 1
   reproductionMethod: 1
-  mutationRate: 100
+  mutationRate: 10
   defaultNeuronsPerLayer: 050000000400000003000000
 --- !u!1 &317702141
 GameObject:
@@ -33604,7 +33604,7 @@ WheelCollider:
     targetPosition: 1
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0
-  m_Mass: 100
+  m_Mass: 300
   m_WheelDampingRate: 1
   m_ForwardFriction:
     m_ExtremumSlip: 1
@@ -33613,11 +33613,11 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 2
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_ExtremumSlip: 10
+    m_ExtremumValue: 13
+    m_AsymptoteSlip: 4
+    m_AsymptoteValue: 4
+    m_Stiffness: 8
   m_Enabled: 1
 --- !u!1 &613245697
 GameObject:
@@ -44878,7 +44878,7 @@ WheelCollider:
     targetPosition: 1
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0
-  m_Mass: 100
+  m_Mass: 300
   m_WheelDampingRate: 1
   m_ForwardFriction:
     m_ExtremumSlip: 1
@@ -44887,11 +44887,11 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 2
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_ExtremumSlip: 10
+    m_ExtremumValue: 13
+    m_AsymptoteSlip: 4
+    m_AsymptoteValue: 4
+    m_Stiffness: 8
   m_Enabled: 1
 --- !u!1 &806160407
 GameObject:
@@ -59453,7 +59453,7 @@ WheelCollider:
     targetPosition: 1
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0
-  m_Mass: 100
+  m_Mass: 300
   m_WheelDampingRate: 1
   m_ForwardFriction:
     m_ExtremumSlip: 1
@@ -59462,11 +59462,11 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 2
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_ExtremumSlip: 10
+    m_ExtremumValue: 13
+    m_AsymptoteSlip: 4
+    m_AsymptoteValue: 4
+    m_Stiffness: 8
   m_Enabled: 1
 --- !u!1 &1086874938
 GameObject:
@@ -65671,7 +65671,7 @@ WheelCollider:
     targetPosition: 1
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0
-  m_Mass: 100
+  m_Mass: 300
   m_WheelDampingRate: 1
   m_ForwardFriction:
     m_ExtremumSlip: 1
@@ -65680,11 +65680,11 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 2
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_ExtremumSlip: 10
+    m_ExtremumValue: 13
+    m_AsymptoteSlip: 4
+    m_AsymptoteValue: 4
+    m_Stiffness: 8
   m_Enabled: 1
 --- !u!1 &1213355611
 GameObject:
@@ -96705,13 +96705,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793370132}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.009997502, y: 1.9799999, z: 0.7000033}
+  m_LocalRotation: {x: 0.36958456, y: 0, z: 0, w: 0.92919713}
+  m_LocalPosition: {x: -0.009997502, y: 6.35, z: 0.7000033}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4019951677402656}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 43.38, y: 0, z: 0}
 --- !u!81 &1793370134
 AudioListener:
   m_ObjectHideFlags: 0
@@ -108742,9 +108742,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948821690126504}
   serializedVersion: 2
-  m_Mass: 800
+  m_Mass: 2500
   m_Drag: 0.3
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -108762,7 +108762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2050e6be4d1dc44f86c6291f327d4b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  savedNetwork: {fileID: 0}
+  savedNetwork: {fileID: 102900000, guid: f741d517f1511a046907a88dd37f0689, type: 3}
   overwriteSavedNetworkOnSave: 0
   neuralNetworkSaveLocation: \Neural Networks\
   trainingImages: []
@@ -108785,9 +108785,9 @@ MonoBehaviour:
   FLWheel: {fileID: 1213201423}
   BRWheel: {fileID: 805549292}
   BLWheel: {fileID: 610725416}
-  accelerationSpeed: 6
-  maxSpeed: 80
-  maxWheelRotation: 40
+  accelerationSpeed: 20
+  maxSpeed: 65
+  maxWheelRotation: 45
   layerMask:
     serializedVersion: 2
     m_Bits: 55
@@ -116502,7 +116502,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948821690126504}
   m_LocalRotation: {x: -0, y: 0.99835634, z: -0, w: -0.05731325}
-  m_LocalPosition: {x: 243.33, y: 0.342, z: 218}
+  m_LocalPosition: {x: 239.1, y: 0.342, z: 213.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4841504412807070}

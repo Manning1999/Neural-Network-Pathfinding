@@ -64,7 +64,7 @@ public class UIController : MonoBehaviour
     }
 
 
-    public void KillAllAgents()
+    public void KillAllAgents()                                                                      
     {
         foreach(Runner runner in FindObjectsOfType<Runner>())
         {
@@ -99,7 +99,7 @@ public class UIController : MonoBehaviour
     {
         if (selectedAgent != null)
         {
-            selectedAgent.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedAgent.transform.position);
+            selectedAgentIcon.transform.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selectedAgent.transform.position);
         } 
     }
 }

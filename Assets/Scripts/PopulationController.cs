@@ -66,6 +66,7 @@ public class PopulationController : MonoBehaviour
 
     [SerializeField]
     private int[] defaultNeuronsPerLayer = new int[] { 5, 4, 3 };
+    public int[] _defaultNeuronsPerLayer { get { return defaultNeuronsPerLayer; } private set { defaultNeuronsPerLayer = value; } }
 
 
     public void Start()
@@ -84,9 +85,9 @@ public class PopulationController : MonoBehaviour
             foreach (Car car in GameObject.FindObjectsOfType<Car>())
             {
                 //create a new network with an input layer large enough to store every pixel from the camera + 1 so their is a boolean for whether the car is on the track
-                car.Init(new NeuralNetwork(new int[4] { car._camera.pixelWidth * car._camera.pixelHeight, 16, 16, 3 }));
+                car.Init(new NeuralNetwork(new int[4] { car._camera.pixelWidth * car._camera.pixelHeight, 16, 8, 3 }));
                 nets.Add(car._net);
-                Debug.Log(car._camera.pixelWidth * car._camera.pixelHeight);
+                
             }
         }
 
@@ -176,7 +177,7 @@ public class PopulationController : MonoBehaviour
         {
 
             netsRemaining.Add(agent._net);
-            agent.Reset();
+            
 
             if (agent._net != bestNet)
             {
@@ -185,6 +186,7 @@ public class PopulationController : MonoBehaviour
                 agent._net.Mutate(mutationRate);
 
             }
+            agent.Reset();
         }
 
         bestNet = null;

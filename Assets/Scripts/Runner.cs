@@ -15,9 +15,10 @@ public class Runner : Agent
 
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        
+        base.Start();
+        inputs = new float[5];    
     }
 
     // Update is called once per frame
@@ -171,7 +172,7 @@ public class Runner : Agent
     public override void KillAgent()
     {
         base.KillAgent();
-
+        stopped = true;
         transform.GetComponent<Renderer>().material.color = Color.red;
     }
 
