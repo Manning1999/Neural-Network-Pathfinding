@@ -37,23 +37,31 @@ public class Car : Agent
     [Tooltip("This is the maximum for how much the steering wheels can rotate (Inverses for minimum rotation)")]
     private float maxWheelRotation = 40;
 
+ 
     [SerializeField]
-    private LayerMask layerMask;
+    [Tooltip("This bool simply controls whether or not the car will control it's speed. I made this because I am working on two versions of the car AI. One basic AI that maintains a constant speed while driving and another that will intelligently accelerate and decelerate when going around corners")]
+    private bool controlsSpeed = false;
 
 
    
 
    
-
+    //This is the location where the car's will reset to when they all die
     Vector3 startPosition;
 
-    // Start is called before the first frame update
+
     protected override void Start()
     {
         base.Start();
         inputs = new float[camera.pixelWidth * camera.pixelHeight];
         rb = transform.GetComponent<Rigidbody>();
         startPosition = transform.position;
+
+        if(controlsSpeed == false)
+        {
+            maxSpeed = 70;
+            accelerationSpeed = 20;
+        }
         
     }
 
@@ -96,9 +104,12 @@ public class Car : Agent
 
         if (net != null && playerControlled == false && stopped == false)
         {
-            
 
-            Accelerate();
+
+            if (controlsSpeed == false)
+            {
+                Accelerate();
+            }
 
             int i = 0;
 
@@ -143,8 +154,38 @@ public class Car : Agent
                 }  
             }
 
-           
-            
+
+            if (controlsSpeed == true)
+            {
+                //3 decelerate, 4 maintain speed, 5 accelerate
+                if (results[3] > results[4])
+                {
+                    if (results[3] > results[5])
+                    {
+                        Decelerate();
+                    }
+                    else
+                    {
+                        Accelerate();
+                    }
+                }
+                else
+                {
+                    if (results[4] > results[5])
+                    {
+                        //Maintain speed
+
+                    }
+                    else
+                    {
+
+                        Accelerate();
+                    }
+                }
+            }
+
+
+
         }
 
         if (playerControlled == true)
@@ -417,5 +458,8 @@ public class Car : Agent
         }
 
     }
+
+
+    
 
 }

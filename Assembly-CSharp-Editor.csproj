@@ -62,8 +62,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\RockVR\Video\Editor\VideoCaptureEditor.cs" />
-    <Compile Include="Assets\RockVR\Video\Editor\VideoCaptureMenuEditor.cs" />
+    <Compile Include="Assets\Editor\AgentEditor.cs" />
+    <Compile Include="Assets\Editor\PopulationControllerEditor.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/manni/Desktop/Projects/Neural Network Racecar/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

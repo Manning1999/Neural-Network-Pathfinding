@@ -32,20 +32,30 @@ public class NeuralNetwork
         InitWeights();
     }
 
-
+    /// <summary>
+    /// This will adds a fitness score which will later be used to find the average fitness of the network
+    /// </summary>
+    /// <param name="fit">Fitness score to add</param>
     public void AddFitness(float fit)
     {
         fitness += fit;
         numFitnesses++;
     }
 
+    /// <summary>
+    /// Sets the fitness to the specified number
+    /// </summary>
+    /// <param name="fit">This is the number which fitness will be set to</param>
     public void SetFitness(float fit)
     {
         fitness = fit;
     }
 
-    //This will return the fitness of the neural network. If findAverage is true, it will return the average fitness by 
-    //dividing the total fitness by the number of times it has been given a fitness score
+    /// <summary>
+    /// This will return the fitness of the neural network. If findAverage is true, it will return the average fitness by dividing the total fitness by the number of times it has been given a fitness score
+    /// </summary>
+    /// <param name="findAverage"></param>
+    /// <returns></returns>
     public float GetFitness(bool findAverage = true)
     {
         if (findAverage == false) return fitness;
@@ -56,7 +66,10 @@ public class NeuralNetwork
 
 
 
-    //This initializes the network
+    /// <summary>
+    /// This initializes the network
+    /// </summary>
+    /// <param name="copyNetwork"></param>
     public NeuralNetwork(NeuralNetwork copyNetwork)
     {
         this.layers = new int[copyNetwork.layers.Length];
@@ -90,7 +103,9 @@ public class NeuralNetwork
     }
 
 
-    //This initializes all the weights for the connections between neurons by giving them randomized weights
+    /// <summary>
+    /// This initializes all the weights for the connections between neurons by giving them randomized weights
+    /// </summary>
     private void InitWeights()
     {
         List<float[][]> weightsList = new List<float[][]>();
@@ -128,7 +143,10 @@ public class NeuralNetwork
 
     }
 
-    //This will return all the weights in string form so they can be printed out to a text file
+    /// <summary>
+    /// This will return all the weights in string form so they can be printed out to a text file
+    /// </summary>
+    /// <returns></returns>
     public string GetWeightsString()
     {
         string weightsString = "";
@@ -152,25 +170,38 @@ public class NeuralNetwork
         return weightsString;
     }
 
-   
-    //returns the weights as a three-dimensional jagged array
+
+    /// <summary>
+    /// returns the weights as a three-dimensional jagged array
+    /// </summary>
+    /// <returns>returns a jagged array which contains all the weights</returns>
     public float[][][] GetWeights()
     {
         return weights;
     }
 
-    //returns the format of the layers
+    /// <summary>
+    /// Returns the number of layers
+    /// </summary>
+    /// <returns></returns>
     public int[] GetLayers(){
         return layers;
     }
 
-    //returns the neurons
+    /// <summary>
+    /// Returns the neurons
+    /// </summary>
+    /// <returns></returns>
     public float[][] GetNeurons()
     {
         return neurons;
     }
+    
 
-
+    /// <summary>
+    /// Will take the inputs and feed them through the network using it's current weights and then returns the outputs in the form of a float[]
+    /// </summary>
+    /// <param name="inputs">The inputs are an array of floats. The inputs will be sigmoided in this functions so pre-sigmoiding them is not neccesary</param>
     public float[] FeedForward(float[] inputs)
     {
 
@@ -206,7 +237,10 @@ public class NeuralNetwork
 
 
 
-    //manually sets the weights
+    /// <summary>
+    /// Manually sets the weights
+    /// </summary>
+    /// <param name="newWeights">The new value of all the weights</param>
     public void SetWeights(float[][][] newWeights)
     {
         for (int i = 0; i < weights.Length; i++)
@@ -224,7 +258,9 @@ public class NeuralNetwork
 
 
 
-    //This will completely re-randomize the weights for a complete mutation
+    /// <summary>
+    /// This will completely randomize all of a networks weights
+    /// </summary>
     public void CompletelyMutate()
     {
         for(int i = 0; i < weights.Length; i++)
@@ -264,7 +300,10 @@ public class NeuralNetwork
     }
 
    
-
+    /// <summary>
+    /// Mutates the specified number of weights/genes
+    /// </summary>
+    /// <param name="weightsToMutate"></param>
     //This will choose x number of weights/genes and randomize them
     public void Mutate(int weightsToMutate)
     {
@@ -294,7 +333,7 @@ public class NeuralNetwork
             if (q == modifiedGenes.Count)
             {
                 modifiedGenes.Add(new Vector3(i, j, k));
-                float newWeight = UnityEngine.Random.Range(-0.5f, 0.5f);
+                float newWeight = UnityEngine.Random.Range(-1f, 1f);
                 //PopulationController.WriteString("Modified gene number: " + i + "," + j + "," + k + "  From " + weights[i][j][k].ToString() + " To " + newWeight);
 
                 weights[i][j][k] = newWeight;
@@ -304,8 +343,71 @@ public class NeuralNetwork
 
     }
 
+    /// <summary>
+    /// /// <summary>
+    /// Picks the specified number of weights to mutate within the range and randomizes them (This requires some knowledge of the network's structure. Going out of bounds will make it default to the min/max)
+    /// <param name="minLayer">Minimum layer for the range within which to mutate weights</param>
+    /// <param name="maxLayer">Maximum layer for the range within which to mutate weights</param>
+    /// <param name="minNeuron">Minimum neuron number for the range within which to mutate weights</param>
+    /// <param name="maxNeuron">Maximum neuron number for the range within which to mutate weights</param>
+    /// <param name="minConnection">Minimum connection number for the range within which to mutate weights</param>
+    /// <param name="maxConnection">Maximum connection number for the range within which to mutate weights</param>
+    /// <param name="numberOfWeightsToMutate">This is how many weights to mutate within the range</param>
+    public void CustomMutate(int minLayer, int maxLayer, int minNeuron, int maxNeuron, int minConnection, int maxConnection, int numberOfWeightsToMutate)
+    {
+        List<Vector3> modifiedGenes = new List<Vector3>();
+        for (int x = 0; x < numberOfWeightsToMutate; x++)
+        {
 
 
+            //pick a random gene
+            if (minLayer <= -1) minLayer = 0;
+            if (maxLayer > weights.Length) maxLayer = weights.Length;
+
+            int i = UnityEngine.Random.Range(minLayer, maxLayer);
+
+            if (minNeuron <= -1) minNeuron = 0;
+            if (maxNeuron > weights[i].Length) maxNeuron = weights[i].Length;
+
+            int j = UnityEngine.Random.Range(minNeuron, maxNeuron);
+
+            if (minConnection <= -1) minConnection = 0;
+            if (maxConnection > weights[i][j].Length) maxConnection = weights[i][j].Length;
+
+            int k = UnityEngine.Random.Range(minConnection, maxConnection);
+
+            int q = 0;
+
+
+            foreach (Vector3 vec in modifiedGenes)
+            {
+
+                if (vec.x == i && vec.y == j && vec.z == k)
+                {
+                    x--;
+                    break;
+                }
+
+                q++;
+            }
+
+            if (q == modifiedGenes.Count)
+            {
+                modifiedGenes.Add(new Vector3(i, j, k));
+                float newWeight = UnityEngine.Random.Range(-1f, 1f);
+                //PopulationController.WriteString("Modified gene number: " + i + "," + j + "," + k + "  From " + weights[i][j][k].ToString() + " To " + newWeight);
+
+                weights[i][j][k] = newWeight;
+            }
+
+        }
+    }
+
+
+    /// <summary>
+    /// Adjusts all the weights by the margin of error
+    /// </summary>
+    /// <param name="difference">Difference</param>
     public void AdjustWeights(float difference)
     {
         for (int i = 0; i < weights.Length; i++)
@@ -321,7 +423,10 @@ public class NeuralNetwork
     }
 
 
-    //Sigmoid function that helps flatten a number to be between 0 and 1
+    /// <summary>
+    /// Flattens a number to be between 0 and 1
+    /// </summary>
+    /// <param name="x">Number to flatten</param>
     public float Sigmoid(float x)
     {
 

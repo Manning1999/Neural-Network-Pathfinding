@@ -28,16 +28,20 @@ public class PopulationController : MonoBehaviour
         }
     }
 
+    /*
     public enum TrainingMethod { BackPropogation, EvolutionaryAlgorithm }
 
     [Tooltip("Backpropogation requires training data which will over time adjust the network's weights to get a working model (This is often the fastest method IF you have good training data. \n \nEvolutionary " +
         "Algorithm simulates evolutionary processes by having a group of neural-networks with randomized weights (genetic variation), they each do their thing and then the one's that are most fit for whatever you want " +
         "them to do copy their weights to the next generation of networks (reproduce) and randomize a specified number of weights (mutate). This process is then repeated until you have a workable model. This method is " +
         "often slower but can produce better results that backpropogation")]
-    public TrainingMethod trainingmethod = TrainingMethod.EvolutionaryAlgorithm;
+    public TrainingMethod trainingmethod = TrainingMethod.EvolutionaryAlgorithm;   */
 
     public enum ReproductionMethod { Sexual, Asexual }
     public ReproductionMethod reproductionMethod = ReproductionMethod.Sexual;
+
+    public enum MutationType { EntireNetwork, CustomRange}
+    public MutationType mutationType = MutationType.EntireNetwork;
 
 
 
@@ -47,8 +51,7 @@ public class PopulationController : MonoBehaviour
     //This is only used for sexual-reproduction
     NeuralNetwork secondBestNet = null;
 
-    float averageFitness;
-    int numFitnesses;
+
 
     //If true, any auto-fitness calculations will be ignored
     bool forcedBest = false;
@@ -69,6 +72,11 @@ public class PopulationController : MonoBehaviour
     public int[] _defaultNeuronsPerLayer { get { return defaultNeuronsPerLayer; } private set { defaultNeuronsPerLayer = value; } }
 
 
+    [SerializeField]
+    [Tooltip("These are the ranges used for mutating a specific part of a network")]
+    private int minLayer, maxLayer, minNeuron, maxNeuron, minConnection, maxConnection;
+
+
     public void Start()
     {
         //determine whether this is the runner scene of the car scene
@@ -85,7 +93,7 @@ public class PopulationController : MonoBehaviour
             foreach (Car car in GameObject.FindObjectsOfType<Car>())
             {
                 //create a new network with an input layer large enough to store every pixel from the camera + 1 so their is a boolean for whether the car is on the track
-                car.Init(new NeuralNetwork(new int[4] { car._camera.pixelWidth * car._camera.pixelHeight, 16, 8, 3 }));
+                car.Init(new NeuralNetwork(new int[4] { car._camera.pixelWidth * car._camera.pixelHeight, 16, 8, 6 }));
                 nets.Add(car._net);
                 
             }
@@ -110,7 +118,6 @@ public class PopulationController : MonoBehaviour
     //Kill the runner and remove them from the active pool of runners
     public void RunnerKilled(NeuralNetwork net)
     {
-        numFitnesses++;
 
 
 
@@ -183,7 +190,9 @@ public class PopulationController : MonoBehaviour
             {
 
                 agent._net.SetWeights(bestNet.GetWeights());
-                agent._net.Mutate(mutationRate);
+
+                if(mutationType == MutationType.EntireNetwork) agent._net.Mutate(mutationRate);
+                if (mutationType == MutationType.CustomRange) agent._net.CustomMutate(minLayer, maxLayer, minNeuron, maxNeuron, minConnection, maxConnection, mutationRate);
 
             }
             agent.Reset();

@@ -42,10 +42,15 @@ public class Agent : MonoBehaviour
     [SerializeField]
     protected List<Texture2D> trainingImages = new List<Texture2D>();
 
+    public List<Texture2D> _trainingImages { get { return trainingImages; } }
+
     [SerializeField]
     protected TextAsset trainingAnswers = null;
 
+    public TextAsset _trainingAnswers { get { return trainingAnswers; } }
+
     [SerializeField]
+    [Min(1)]
     protected int trainingIterations = 10;
 
     [SerializeField]
@@ -141,7 +146,7 @@ public class Agent : MonoBehaviour
    
 
     [ContextMenu("Save network")]
-    protected void SaveNetwork()
+    public void SaveNetwork()
     {
         //Create a directory in which to store any saved neural networks
         if (!System.IO.Directory.Exists(Application.dataPath + neuralNetworkSaveLocation))
@@ -235,7 +240,7 @@ public class Agent : MonoBehaviour
 
 
     [ContextMenu("Make best")]
-    protected void MakeBest()
+    public void MakeBest()
     {
         PopulationController.Instance.SetBest(net);
     }
