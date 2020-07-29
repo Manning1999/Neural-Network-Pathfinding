@@ -1,0 +1,2 @@
+# Neural-Network-Pathfinding
+This is a project which contains two scene, the first is a simple track which an AI has to learn to navigate and uses raycasts as it's sight, the second is a much larger scale scene which has a racecar that uses a camera for it's sight, and the grayscale value of each pixel is the input for the neural network. The race car's will not manage only their rotation but also their acceleration
